@@ -83,8 +83,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2 font-bold text-lg">
             <img src="/logo.png" alt="" width={28} height={28} />
-            <span>clear</span>
-            <span className="-ml-1 bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent">proof</span>
+            <span>clear<span className="bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent">proof</span></span>
           </Link>
           <div className="flex items-center gap-5 text-sm text-muted-foreground">
             <Link href="https://docs.clearproof.world" className="hover:text-foreground transition-colors">Docs</Link>

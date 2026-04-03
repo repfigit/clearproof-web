@@ -90,14 +90,20 @@ export default function Home() {
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="https://github.com/repfigit/clearproof"
+              href="https://docs.clearproof.world"
               className="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
+            >
+              Documentation
+            </Link>
+            <Link
+              href="https://github.com/repfigit/clearproof"
+              className="inline-flex h-11 items-center justify-center rounded-lg bg-secondary px-6 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
             >
               GitHub
             </Link>
             <Link
               href="https://www.npmjs.com/org/clearproof"
-              className="inline-flex h-11 items-center justify-center rounded-lg bg-secondary px-6 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-background px-6 text-sm font-medium transition-colors hover:bg-muted"
             >
               npm
             </Link>
@@ -304,6 +310,9 @@ export default function Home() {
             Apache-2.0 License
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
+            <Link href="https://docs.clearproof.world" className="hover:text-foreground transition-colors">
+              Docs
+            </Link>
             <Link href="https://github.com/repfigit/clearproof" className="hover:text-foreground transition-colors">
               GitHub
             </Link>

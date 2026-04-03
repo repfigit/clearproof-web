@@ -6,23 +6,28 @@ import Link from "next/link";
 const CONTRACTS = [
   {
     name: "Groth16Verifier",
-    address: "0xb8BaAc48639227Ae76fC79508a0cecC69C0dBcb9",
+    address: "0xD2E419C913F2f3aA661DB422A295026F5A1CB71c",
     purpose: "ZK proof verification",
   },
   {
     name: "VASPRegistry",
-    address: "0xdCaCF0d749A79376F08C36a050de96f54C6b77Ce",
-    purpose: "VASP identity + issuer root",
+    address: "0xa8aB6DBA49307617945a46b4Ae4A27d922AE5962",
+    purpose: "VASP identity + discovery",
   },
   {
     name: "SanctionsOracle",
-    address: "0xb394B066e784eCF152D662c0Fa6fCBd770dFaC4B",
+    address: "0xFf14ef1021D081DD2A536a2cf8066F5334340919",
     purpose: "Sanctions Merkle root",
   },
   {
     name: "ComplianceRegistry",
-    address: "0x763648FC1b5BB9a05C76E369D91546cF584cD1A0",
+    address: "0x4B889625d263fdD17F609c137ca9ea5463350d75",
     purpose: "Domain-bound proof recording",
+  },
+  {
+    name: "SanctionsRootRelay",
+    address: "0x1e808E9739f24b80bEb379B1a88e4152eB41635A",
+    purpose: "Oracle update adapter",
   },
 ];
 
@@ -73,15 +78,32 @@ const PACKAGES = [
 export default function Home() {
   return (
     <main className="flex-1">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+            <img src="/logo.png" alt="" width={28} height={28} />
+            <span>clear</span>
+            <span className="-ml-1 bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent">proof</span>
+          </Link>
+          <div className="flex items-center gap-5 text-sm text-muted-foreground">
+            <Link href="https://docs.clearproof.world" className="hover:text-foreground transition-colors">Docs</Link>
+            <Link href="https://github.com/repfigit/clearproof" className="hover:text-foreground transition-colors">GitHub</Link>
+            <Link href="https://www.npmjs.com/org/clearproof" className="hover:text-foreground transition-colors">npm</Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/50 via-background to-background" />
-        <div className="relative mx-auto max-w-5xl px-6 pb-20 pt-32 text-center">
+        <div className="relative mx-auto max-w-5xl px-6 pb-20 pt-24 text-center">
           <Badge variant="secondary" className="mb-6 font-mono text-xs">
             v0.2.0 on Sepolia testnet
           </Badge>
-          <h1 className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-            clearproof
+          <h1 className="flex items-center justify-center gap-3 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+            <img src="/logo.png" alt="clearproof" width={64} height={64} className="sm:w-16 sm:h-16 lg:w-20 lg:h-20" />
+            <span>clear<span className="bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent">proof</span></span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
             ZK infrastructure for compliant value transfer. Prove sanctions
@@ -108,7 +130,7 @@ export default function Home() {
               npm
             </Link>
             <Link
-              href="https://sepolia.etherscan.io/address/0x763648FC1b5BB9a05C76E369D91546cF584cD1A0#code"
+              href="https://sepolia.etherscan.io/address/0x4B889625d263fdD17F609c137ca9ea5463350d75#code"
               className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-background px-6 text-sm font-medium transition-colors hover:bg-muted"
             >
               Etherscan
@@ -319,7 +341,7 @@ export default function Home() {
             <Link href="https://www.npmjs.com/org/clearproof" className="hover:text-foreground transition-colors">
               npm
             </Link>
-            <Link href="https://sepolia.etherscan.io/address/0x763648FC1b5BB9a05C76E369D91546cF584cD1A0#code" className="hover:text-foreground transition-colors">
+            <Link href="https://sepolia.etherscan.io/address/0x4B889625d263fdD17F609c137ca9ea5463350d75#code" className="hover:text-foreground transition-colors">
               Etherscan
             </Link>
           </div>

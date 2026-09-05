@@ -13,19 +13,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "clearproof — ZK infrastructure for compliant value transfer",
-  description: "Generate zero-knowledge proofs that FATF Travel Rule compliance was performed correctly. Sanctions clearance, credential validity, and jurisdiction-correct tier encoding — without revealing private data.",
+  metadataBase: new URL("https://www.clearproof.world"),
+  title: "clearproof — Privacy-focused evidence for crypto transfers",
+  description: "Explore pilot-stage zero-knowledge checks, encrypted transfer information and EVM verification. Review current packages, testnet deployments, assurance limits and planned workflows.",
+  alternates: { canonical: "/" },
   openGraph: {
     title: "clearproof",
-    description: "ZK infrastructure for compliant value transfer",
-    url: "https://clearproof.world",
+    description: "Pilot-stage zero-knowledge checks and encrypted crypto transfer information. Current capabilities, assurance status and planned workflows.",
+    url: "https://www.clearproof.world",
     siteName: "clearproof",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "clearproof",
-    description: "ZK infrastructure for compliant value transfer",
+    description: "Pilot-stage zero-knowledge checks and encrypted crypto transfer information. Current capabilities, assurance status and planned workflows.",
   },
 };
 

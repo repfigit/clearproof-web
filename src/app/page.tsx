@@ -62,7 +62,7 @@ export default function Home() {
             <Link href="https://docs.clearproof.world" className="inline-flex h-11 items-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/80">Read the documentation</Link>
             <Link href="#status" className="inline-flex h-11 items-center rounded-lg border px-6 text-sm font-medium hover:bg-muted">Review project status</Link>
           </div>
-          <p className="mt-8 text-xs text-muted-foreground">Information checked September 5, 2026</p>
+          <p className="mt-8 text-xs text-muted-foreground">Repository and package status checked September 6, 2026</p>
         </div>
       </section>
 
@@ -134,7 +134,7 @@ export default function Home() {
         <div className="mt-6 rounded-lg border p-6 text-sm text-muted-foreground">
           <h3 className="font-semibold text-foreground">Latest development progress</h3>
           <p className="mt-3">An open draft change adds wallet-signed credential enrollment, revocation records, encrypted storage scoped to each tenant, signed issuer roots and a contract for recording approved roots. Transfer checks bind participant, asset, valuation, policy and timing fields to a commitment.</p>
-          <p className="mt-3">Local database, circuit-witness and test-chain checks cover these components. A complete integrated proof workflow, consistent acceptance across the API, SDK and contracts, and independent security review remain open. This work is not included in the published 0.3.0 packages or the Sepolia deployments listed below.</p>
+          <p className="mt-3">The draft also adds development proof generation and cryptographic verification, signed valuation inputs, versioned policy selection and rule evaluation that explains allow, review, deny or indeterminate outcomes. Local database, proof and test-chain checks cover these components. A complete integrated proof workflow, consistent acceptance across the API, SDK and contracts, and independent security review remain open. This work is not included in the published 0.3.0 packages or the Sepolia deployments listed below.</p>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ROADMAP.map((item) => (
@@ -150,7 +150,7 @@ export default function Home() {
 
       <section id="packages" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
         <h2 className="text-3xl font-bold tracking-tight">Published packages</h2>
-        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 5, 2026. Review each package’s contents and requirements before integrating.</p>
+        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 6, 2026. Review each package’s contents and requirements before integrating.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {PACKAGES.map((item) => (
             <Link key={item.name} href={`https://www.npmjs.com/package/${item.name}`} className="group">

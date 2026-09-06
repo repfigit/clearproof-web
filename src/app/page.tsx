@@ -128,9 +128,14 @@ export default function Home() {
       <section id="roadmap" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-3xl font-bold tracking-tight">What we’re building next</h2>
-          <Badge variant="outline">Planned</Badge>
+          <Badge variant="outline">In development · Unreleased</Badge>
         </div>
-        <p className="mt-3 max-w-2xl text-muted-foreground">The next pilot focuses on trustworthy evidence and recurring operational work for a stablecoin processor or custodian. The features below are planned, not generally available.</p>
+        <p className="mt-3 max-w-2xl text-muted-foreground">The next pilot focuses on trustworthy evidence and recurring operational work for a stablecoin processor or custodian. Development is underway; these capabilities are not generally available.</p>
+        <div className="mt-6 rounded-lg border p-6 text-sm text-muted-foreground">
+          <h3 className="font-semibold text-foreground">Latest development progress</h3>
+          <p className="mt-3">An open draft change adds wallet-signed credential enrollment, revocation records, encrypted storage scoped to each tenant, signed issuer roots and a contract for recording approved roots. Transfer checks bind participant, asset, valuation, policy and timing fields to a commitment.</p>
+          <p className="mt-3">Local database, circuit-witness and test-chain checks cover these components. A complete integrated proof workflow, consistent acceptance across the API, SDK and contracts, and independent security review remain open. This work is not included in the published 0.3.0 packages or the Sepolia deployments listed below.</p>
+        </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ROADMAP.map((item) => (
             <Card key={item.title}><CardContent className="pt-6">
@@ -174,7 +179,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold tracking-tight">Recorded testnet deployments</h2>
           <Badge variant="outline">Sepolia only</Badge>
         </div>
-        <p className="mt-3 max-w-2xl text-muted-foreground">Addresses from the July 20, 2026 deployment record. Contract bytecode was checked on Sepolia on September 5, 2026. Deployment and explorer listings do not establish an independent security audit.</p>
+        <p className="mt-3 max-w-2xl text-muted-foreground">Addresses from the July 20, 2026 deployment record. Contract bytecode was checked on Sepolia on September 5, 2026. These are historical test deployments; code presence does not establish that they match the current development checkout. Deployment and explorer listings do not establish an independent security audit.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {CONTRACTS.map((item) => (
             <Card key={item.name}><CardContent className="pt-6">

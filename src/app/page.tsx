@@ -15,7 +15,7 @@ const CONTRACTS = [
 const PACKAGES = [
   { name: "@clearproof/proof", desc: "TypeScript proof generation and verification SDK." },
   { name: "@clearproof/circuits", desc: "Circuit package. Check artifact availability before attempting proof generation." },
-  { name: "@clearproof/cli", desc: "Published, but public installation currently fails because its @clearproof/content dependency is unavailable on npm. Source builds require repository access." },
+  { name: "@clearproof/cli", desc: "Published, but public installation currently fails because its @clearproof/content dependency is unavailable on npm. Source builds are available from GitHub." },
   { name: "@clearproof/contracts", desc: "Solidity contracts and integration artifacts for EVM development." },
 ];
 
@@ -41,6 +41,7 @@ export default function Home() {
             <Link href="#status" className="hover:text-foreground">Status</Link>
             <Link href="https://docs.clearproof.world" className="hover:text-foreground">Docs</Link>
             <Link href="#packages" className="hover:text-foreground">Packages</Link>
+            <Link href="https://github.com/repfigit/clearproof" className="hover:text-foreground">GitHub</Link>
           </div>
         </div>
       </nav>
@@ -88,9 +89,9 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-8 rounded-lg border p-6 text-sm text-muted-foreground">
-          <p><strong className="text-foreground">Source availability:</strong> the main GitHub repository, <span className="break-all font-mono">repfigit/clearproof</span>, is currently private. Public npm packages and documentation are available.</p>
+          <p><strong className="text-foreground">Source availability:</strong> the main GitHub repository, <Link href="https://github.com/repfigit/clearproof" className="break-all font-mono underline underline-offset-4">repfigit/clearproof</Link>, is public. The local adoption pilot is on the unreleased feat/adoption-pilot-foundation branch; published packages and historical deployments are separate.</p>
           <p className="mt-3"><strong className="text-foreground">Versions:</strong> published npm packages are at 0.3.0; the development checkout is 0.4.0. Features in development may not be available in the published packages.</p>
-          <p className="mt-3"><strong className="text-foreground">Installation:</strong> the public proof SDK installs successfully. The published CLI currently has an unavailable dependency; use an authorized source checkout for CLI evaluation.</p>
+          <p className="mt-3"><strong className="text-foreground">Installation:</strong> the public proof SDK installs successfully. The published CLI currently has an unavailable dependency; use a source checkout for CLI evaluation.</p>
           <p className="mt-3"><strong className="text-foreground">Assurance:</strong> no completed independent circuit or contract audit, production trusted setup, or end-to-end regulatory compliance certification is claimed. Use synthetic data and testnet funds for evaluation.</p>
         </div>
       </section>

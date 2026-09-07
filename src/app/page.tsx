@@ -89,7 +89,7 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-8 rounded-lg border p-6 text-sm text-muted-foreground">
-          <p><strong className="text-foreground">Source availability:</strong> the main GitHub repository, <Link href="https://github.com/repfigit/clearproof" className="break-all font-mono underline underline-offset-4">repfigit/clearproof</Link>, is public. The local adoption pilot is on the unreleased feat/adoption-pilot-foundation branch; published packages and historical deployments are separate.</p>
+          <p><strong className="text-foreground">Source availability:</strong> the main GitHub repository, <Link href="https://github.com/repfigit/clearproof" className="break-all font-mono underline underline-offset-4">repfigit/clearproof</Link>, is public. The local adoption pilot is merged into main through PR #27 and remains unreleased on npm; published packages and historical deployments are separate.</p>
           <p className="mt-3"><strong className="text-foreground">Versions:</strong> published npm packages are at 0.3.0; the development checkout is 0.4.0. Features in development may not be available in the published packages.</p>
           <p className="mt-3"><strong className="text-foreground">Installation:</strong> the public proof SDK installs successfully. The published CLI currently has an unavailable dependency; use a source checkout for CLI evaluation.</p>
           <p className="mt-3"><strong className="text-foreground">Assurance:</strong> no completed independent circuit or contract audit, production trusted setup, or end-to-end regulatory compliance certification is claimed. Use synthetic data and testnet funds for evaluation.</p>

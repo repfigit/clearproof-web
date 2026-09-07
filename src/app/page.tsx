@@ -62,7 +62,7 @@ export default function Home() {
             <Link href="https://docs.clearproof.world" className="inline-flex h-11 items-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/80">Read the documentation</Link>
             <Link href="#status" className="inline-flex h-11 items-center rounded-lg border px-6 text-sm font-medium hover:bg-muted">Review project status</Link>
           </div>
-          <p className="mt-8 text-xs text-muted-foreground">Repository and package status checked September 6, 2026</p>
+          <p className="mt-8 text-xs text-muted-foreground">Repository and package status checked September 7, 2026</p>
         </div>
       </section>
 
@@ -79,7 +79,7 @@ export default function Home() {
             { title: "Specific proof checks", desc: "Circuits model sanctions non-membership, credential checks and amount tiers. A proof establishes its encoded statement; authentic inputs, holder authority and the surrounding policy still require verification." },
             { title: "Encrypted information", desc: "Hybrid payload components carry a proof alongside encrypted personal information. Authorized recipients still receive required information. Key discovery, rotation and operational controls need integration validation." },
             { title: "Protocol prototypes", desc: "TRP, TRISA and TAIP-10 bridge components exist. Complete bilateral interoperability and provider-specific workflows remain to be demonstrated." },
-            { title: "Verification boundaries", desc: "The registry adds state, domain, expiry and replay checks to cryptographic verification. Full equivalence between API, SDK and registry acceptance remains open." },
+            { title: "Verification boundaries", desc: "The development pilot checks the same proof statement in Python and Solidity. The API and SDK use server-selected trust; PostgreSQL owns authorization, and the contract mirrors approved receipts under trusted source checkpoints." },
           ].map((item) => (
             <Card key={item.title}><CardContent className="pt-6">
               <h3 className="font-semibold">{item.title}</h3>
@@ -127,19 +127,19 @@ export default function Home() {
 
       <section id="roadmap" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
         <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-3xl font-bold tracking-tight">What we’re building next</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Development pilot and next steps</h2>
           <Badge variant="outline">In development · Unreleased</Badge>
         </div>
-        <p className="mt-3 max-w-2xl text-muted-foreground">The next pilot focuses on trustworthy evidence and recurring operational work for a stablecoin processor or custodian. Development is underway; these capabilities are not generally available.</p>
+        <p className="mt-3 max-w-2xl text-muted-foreground">The unreleased pilot focuses on evidence and recurring operational work for a stablecoin processor or custodian. The capabilities below have local synthetic acceptance evidence; customer adoption and managed distribution remain to be validated.</p>
         <div className="mt-6 rounded-lg border p-6 text-sm text-muted-foreground">
           <h3 className="font-semibold text-foreground">Latest development progress</h3>
           <p className="mt-3">An open draft change adds wallet-signed credential enrollment, revocation records, encrypted storage scoped to each tenant, signed issuer roots and a contract for recording approved roots. Transfer checks bind participant, asset, valuation, policy and timing fields to a commitment.</p>
           <p className="mt-3">The draft also adds development proof generation and cryptographic verification, signed valuation inputs, and policy evaluation that explains allow, review, deny or indeterminate outcomes. Policy comparison reports show how proposed rules change decisions using supplied or retained evidence. Policy review and activation are separate operations, with retained activation history and explicit rollback to a reviewed, effective version.</p>
-          <p className="mt-3">The draft local authorization service checks the active policy, credential revocation, approved roots, signed external facts and the cryptographic proof. An allow decision requires approved transfer information and encrypts it for a trusted recipient key. Evidence, a receipt and replay protection are recorded together; a failure rolls back the operation. Recipient delivery, payment execution and a public authorization endpoint remain open.</p>
-          <p className="mt-3">Encrypted evidence exports preserve the original proof, policy and source-record versions for an approved reviewer. Offline inspection checks integrity and cryptographic validity; independently configured trust also enables statement reconstruction and conditional policy replay after proof expiry. Historical conclusions remain indeterminate while decision authority, historical revocation and independent timing evidence are incomplete.</p>
+          <p className="mt-3">The draft local authorization service checks the active policy, credential revocation, approved roots, signed external facts and the cryptographic proof. An allow decision requires approved transfer information and encrypts it for a trusted recipient key. Evidence, a receipt and replay protection are recorded together; a failure rolls back the operation. A local simulated counterparty checks signed evidence and encrypted information and returns accept, reject, information-request or pending outcomes. Remote delivery and payment execution remain outside this local acceptance scope.</p>
+          <p className="mt-3">Encrypted evidence exports preserve the original proof, policy and source-record versions for an approved reviewer. Offline inspection checks integrity and cryptographic validity; independently configured trust also enables statement reconstruction and conditional policy replay after proof expiry. Review also checks independently configured decision and source authorities, historical revocation and RFC 3161 timing evidence. Results distinguish supported, contradicted and indeterminate evidence; missing trust never becomes approval.</p>
           <p className="mt-3">Transfer investigation tools combine compliance, proof, counterparty, custody, chain and evidence observations into timelines and paginated queues. Reports identify conflicts and unresolved steps with suggested owners and next actions. Access is authenticated and scoped to each tenant; reports do not authorize transfers.</p>
           <p className="mt-3">A Fireblocks webhook adapter verifies a supported signature and event profile and retains encrypted source evidence through an authenticated relay. Validation uses synthetic signed events and a local database. Live provider interoperability and automatic signing-key refresh remain unvalidated or unimplemented.</p>
-          <p className="mt-3">Local database, proof, CLI/API and test-chain checks cover these components using synthetic data and development keys. Complete bilateral workflows, consistent acceptance across the API, SDK and contracts, fully authenticated historical verification, and independent security review remain open. This work is not included in the published 0.3.0 packages or the Sepolia deployments listed below.</p>
+          <p className="mt-3">Observation mode records explained outcomes without authorizing transfers. Selected-cohort reports keep missing cases, disagreement and measured evaluation time explicit. A source-checkout runner owns a disposable database and test chain, exercises real development proofs and retains encrypted historical exports for offline review. These local results do not establish live provider interoperability, customer value or production assurance. Independent security review remains open. This work is not included in the published 0.3.0 packages or the Sepolia deployments listed below.</p>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {ROADMAP.map((item) => (
@@ -155,7 +155,7 @@ export default function Home() {
 
       <section id="packages" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
         <h2 className="text-3xl font-bold tracking-tight">Published packages</h2>
-        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 6, 2026. Review each package’s contents and requirements before integrating.</p>
+        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 7, 2026. Review each package’s contents and requirements before integrating.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {PACKAGES.map((item) => (
             <Link key={item.name} href={`https://www.npmjs.com/package/${item.name}`} className="group">

@@ -63,7 +63,7 @@ export default function Home() {
             <Link href="https://docs.clearproof.world" className="inline-flex h-11 items-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/80">Read the documentation</Link>
             <Link href="#status" className="inline-flex h-11 items-center rounded-lg border px-6 text-sm font-medium hover:bg-muted">Review project status</Link>
           </div>
-          <p className="mt-8 text-xs text-muted-foreground">Repository and package status checked September 7, 2026</p>
+          <p className="mt-8 text-xs text-muted-foreground">Repository and package status checked September 24, 2026</p>
         </div>
       </section>
 
@@ -156,7 +156,7 @@ export default function Home() {
 
       <section id="packages" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
         <h2 className="text-3xl font-bold tracking-tight">Published packages</h2>
-        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 7, 2026. Review each package’s contents and requirements before integrating.</p>
+        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 24, 2026. @clearproof/cli is published but does not install cleanly because its @clearproof/content dependency is unavailable on npm; source builds are available from GitHub. Review each package’s contents and requirements before integrating.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {PACKAGES.map((item) => (
             <Link key={item.name} href={`https://www.npmjs.com/package/${item.name}`} className="group">
@@ -185,7 +185,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold tracking-tight">Recorded testnet deployments</h2>
           <Badge variant="outline">Sepolia only</Badge>
         </div>
-        <p className="mt-3 max-w-2xl text-muted-foreground">Addresses from the July 20, 2026 deployment record. Contract bytecode was checked on Sepolia on September 5, 2026. These are historical test deployments; code presence does not establish that they match the current development checkout. Deployment and explorer listings do not establish an independent security audit.</p>
+        <p className="mt-3 max-w-2xl text-muted-foreground">Addresses from the July 20, 2026 deployment record. Contract bytecode was checked on Sepolia on September 24, 2026. These are historical test deployments; code presence does not establish that they match the current development checkout. Deployment and explorer listings do not establish an independent security audit.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {CONTRACTS.map((item) => (
             <Card key={item.name}><CardContent className="pt-6">

@@ -206,3 +206,40 @@
     animation: none;
   }
 }
+
+/* Autoplay cue: a bar fills the next view's button before the card switches. */
+.autoplay-progress {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #6366f1, #22d3ee);
+  animation: autoplay-fill var(--dwell, 3500ms) linear forwards;
+}
+
+@keyframes autoplay-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* A soft pulsing ring on "With clearproof" while the plain view is showing. */
+.attention {
+  box-shadow: 0 0 0 1px oklch(0.75 0.13 215 / 0.6);
+  animation: attention-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes attention-pulse {
+  50% {
+    box-shadow: 0 0 0 1px oklch(0.75 0.13 215 / 0.9), 0 0 16px -2px oklch(0.75 0.13 215 / 0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attention {
+    animation: none;
+  }
+}

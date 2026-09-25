@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 // Synthetic sample transfer. No real person or account.
 const FIELDS = [
@@ -22,6 +22,9 @@ const FACTS = [
   "It can authorize the transfer once, and it expires within five minutes.",
 ];
 
+// How long each view stays on screen during autoplay.
+const DWELL_MS = { plain: 3500, sealed: 8000 } as const;
+
 // Decorative ciphertext: deterministic hex derived from each value, so it is stable across renders.
 function cipherFor(text: string) {
   // FNV-1a over the whole value first, then a xorshift stream, so values never share a prefix.
@@ -38,40 +41,142 @@ function cipherFor(text: string) {
   return out.slice(0, text.length * 2);
 }
 
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function useReducedMotion() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia(REDUCED_MOTION);
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => true, // Server render: no autoplay until the client says otherwise.
+  );
+}
+
 type View = "plain" | "sealed";
 
 export function TransferSpecimen() {
   const [view, setView] = useState<View>("plain");
+  const [autoplay, setAutoplay] = useState(true);
+  const [userPaused, setUserPaused] = useState(false);
+  const [hovering, setHovering] = useState(false);
+  const [inView, setInView] = useState(false);
+  const [runId, setRunId] = useState(0);
+  const [announce, setAnnounce] = useState(false);
+  const reducedMotion = useReducedMotion();
+  const cardRef = useRef<HTMLDivElement>(null);
   const sealed = view === "sealed";
+
+  const playing = autoplay && !userPaused && !hovering && inView && !reducedMotion;
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.5 });
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!playing) return;
+    const timer = setTimeout(() => {
+      setView((current) => (current === "plain" ? "sealed" : "plain"));
+      setRunId((id) => id + 1);
+    }, DWELL_MS[view]);
+    return () => clearTimeout(timer);
+  }, [playing, view, runId]);
+
+  // Restart the progress bar (and the dwell timer) whenever playback resumes.
+  const resume = useCallback(() => setRunId((id) => id + 1), []);
+
+  const choose = (next: View) => {
+    setAutoplay(false);
+    setAnnounce(true);
+    setView(next);
+  };
+
+  const target: View = sealed ? "plain" : "sealed";
 
   return (
     <div
+      ref={cardRef}
       data-sealed={sealed}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => {
+        setHovering(false);
+        resume();
+      }}
+      onFocus={() => setHovering(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setHovering(false);
+          resume();
+        }
+      }}
       className="relative rounded-xl border border-white/10 bg-card/70 shadow-[0_0_80px_-20px_oklch(0.55_0.2_265/0.55)] backdrop-blur"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-3">
-        <p className="text-sm text-muted-foreground">A sample transfer between two institutions. Switch views to compare.</p>
-        <div role="group" aria-label="How the transfer is sent" className="flex rounded-full border border-white/10 bg-background/60 p-0.5 text-sm">
-          {(
-            [
-              ["plain", "Plain message"],
-              ["sealed", "With clearproof"],
-            ] as const
-          ).map(([value, label]) => (
+        <p className="text-sm text-muted-foreground">
+          The same transfer, sent two ways. Watch it switch, or choose a view.
+        </p>
+        <div className="flex items-center gap-2">
+          <div role="group" aria-label="How the transfer is sent" className="flex rounded-full border border-white/10 bg-background/60 p-0.5 text-sm">
+            {(
+              [
+                ["plain", "Plain message"],
+                ["sealed", "With clearproof"],
+              ] as const
+            ).map(([value, label]) => {
+              const active = view === value;
+              const next = autoplay && value === target;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => choose(value)}
+                  className={`relative overflow-hidden rounded-full px-4 py-1.5 font-medium transition-colors ${
+                    active
+                      ? "bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-[0_0_18px_-4px_#22d3ee]"
+                      : "text-muted-foreground hover:text-foreground"
+                  } ${next && value === "sealed" ? "attention text-foreground" : ""}`}
+                >
+                  {label}
+                  {next && playing && (
+                    <span
+                      key={runId}
+                      aria-hidden="true"
+                      className="autoplay-progress"
+                      style={{ "--dwell": `${DWELL_MS[view]}ms` } as React.CSSProperties}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          {autoplay && !reducedMotion && (
             <button
-              key={value}
               type="button"
-              aria-pressed={view === value}
-              onClick={() => setView(value)}
-              className={`rounded-full px-4 py-1.5 font-medium transition-colors ${
-                view === value
-                  ? "bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-[0_0_18px_-4px_#22d3ee]"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={() => {
+                setUserPaused((paused) => !paused);
+                resume();
+              }}
+              aria-label={userPaused ? "Play the demo" : "Pause the demo"}
+              className="grid size-8 place-items-center rounded-full border border-white/10 text-muted-foreground hover:text-foreground"
             >
-              {label}
+              {userPaused ? (
+                <svg viewBox="0 0 16 16" className="size-3.5" aria-hidden="true">
+                  <path d="M4 2.5v11l9-5.5z" fill="currentColor" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 16 16" className="size-3.5" aria-hidden="true">
+                  <path d="M4 2.5h3v11H4zM9 2.5h3v11H9z" fill="currentColor" />
+                </svg>
+              )}
             </button>
-          ))}
+          )}
         </div>
       </div>
 
@@ -93,7 +198,8 @@ export function TransferSpecimen() {
           ))}
         </dl>
 
-        <div className="border-t border-white/10 px-5 py-6 md:border-t-0" aria-live="polite">
+        {/* Announce only views the visitor chose, not automatic switches. */}
+        <div className="border-t border-white/10 px-5 py-6 md:border-t-0" aria-live={announce ? "polite" : "off"}>
           {sealed ? (
             <>
               <h3 className="font-semibold">What anyone checking the proof learns</h3>

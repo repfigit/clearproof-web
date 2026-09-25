@@ -71,43 +71,46 @@ export function TransferSpecimen() {
         </dl>
 
         <div className="border-t border-rule px-5 py-6 md:border-t-0" aria-live="polite">
-          <div className={sealed ? "hidden" : undefined}>
-            <h3 className="font-semibold">Where this ends up</h3>
-            <p className="mt-4 text-[15px]">
-              Once decrypted, the full record sits in plain form in every system that processes, logs or
-              stores it: compliance tools, support queues, analytics exports and backups on both sides.
-            </p>
-            <p className="mt-3 text-[15px]">
-              Each copy is another place a customer&rsquo;s identity can leak, and the receiving side still has
-              to take the sender&rsquo;s word that screening happened.
-            </p>
-            <p className="mt-5 border-t border-rule pt-4 text-sm text-muted">
-              Switch to <strong className="font-semibold text-ink">With Clearproof</strong> to see the same
-              transfer sent as a proof plus a sealed envelope.
-            </p>
-          </div>
-          <div className={!sealed ? "sr-only" : undefined} aria-hidden={!sealed}>
-            <h3 className="font-semibold">What anyone checking the proof learns</h3>
-            <ul className="mt-4 space-y-3">
-              {FACTS.map((fact, index) => (
-                <li
-                  key={fact}
-                  className="fact flex gap-3 text-[15px]"
-                  style={{ "--delay": `${420 + index * 70}ms` } as React.CSSProperties}
-                >
-                  <svg aria-hidden="true" viewBox="0 0 20 20" className="mt-0.5 size-5 shrink-0 text-seal">
-                    <circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M6 10.3l2.6 2.6L14 7.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-                  </svg>
-                  <span>{fact}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-5 border-t border-rule pt-4 text-sm text-muted">
-              The personal details still reach the receiving institution, encrypted to its key. Nobody else
-              along the way can read them.
-            </p>
-          </div>
+          {sealed ? (
+            <>
+              <h3 className="font-semibold">What anyone checking the proof learns</h3>
+              <ul className="mt-4 space-y-3">
+                {FACTS.map((fact, index) => (
+                  <li
+                    key={fact}
+                    className="fact flex gap-3 text-[15px]"
+                    style={{ "--delay": `${420 + index * 70}ms` } as React.CSSProperties}
+                  >
+                    <svg aria-hidden="true" viewBox="0 0 20 20" className="mt-0.5 size-5 shrink-0 text-seal">
+                      <circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                      <path d="M6 10.3l2.6 2.6L14 7.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                    </svg>
+                    <span>{fact}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 border-t border-rule pt-4 text-sm text-muted">
+                The personal details still reach the receiving institution, encrypted to its key. Nobody else
+                along the way can read them.
+              </p>
+            </>
+          ) : (
+            <>
+              <h3 className="font-semibold">Where this ends up</h3>
+              <p className="mt-4 text-[15px]">
+                Once decrypted, the full record sits in plain form in every system that processes, logs or
+                stores it: compliance tools, support queues, analytics exports and backups on both sides.
+              </p>
+              <p className="mt-3 text-[15px]">
+                Each copy is another place a customer&rsquo;s identity can leak, and the receiving side still has
+                to take the sender&rsquo;s word that screening happened.
+              </p>
+              <p className="mt-5 border-t border-rule pt-4 text-sm text-muted">
+                Switch to <strong className="font-semibold text-ink">With Clearproof</strong> to see the same
+                transfer sent as a proof plus a sealed envelope.
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>

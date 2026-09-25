@@ -65,14 +65,18 @@ body {
   transform: scaleX(1);
 }
 
+/* Facts are created when the sealed view opens, so use a keyframe animation:
+   unlike a transition, it runs when an element is first rendered. */
 .fact {
-  transition: opacity 300ms ease, transform 300ms ease;
-  transition-delay: var(--delay, 0ms);
+  animation: fact-in 300ms ease both;
+  animation-delay: var(--delay, 0ms);
 }
 
-[data-sealed="false"] .fact {
-  opacity: 0;
-  transform: translateY(4px);
+@keyframes fact-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -80,8 +84,10 @@ body {
     scroll-behavior: auto;
   }
   .field-value > .field-text,
-  .field-value > .redaction,
-  .fact {
+  .field-value > .redaction {
     transition: none;
+  }
+  .fact {
+    animation: none;
   }
 }

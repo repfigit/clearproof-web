@@ -22,12 +22,12 @@ const LIFECYCLE = [
     body: "A Groth16 proof binds the credential, the sanctions status of both wallets, the valuation and the transfer itself. It publishes eight values; everything else stays private.",
   },
   {
-    title: "Seal and send",
-    body: "The information the rules require is encrypted to the receiving institution’s published key and sent alongside the proof.",
+    title: "Authorize once",
+    body: "The sending institution’s authorization service checks the proof against current roots, revocation and the active policy. Only an allow decision consumes it, and only once; a replay fails.",
   },
   {
-    title: "Authorize once",
-    body: "The receiver checks the proof against current roots, then consumes it. A replay fails. An on-chain registry can mirror the receipt for anyone to inspect.",
+    title: "Seal and send",
+    body: "The information the rules require is encrypted to the receiving institution’s published key and sent with the proof and a signed decision. An on-chain registry can mirror the receipt for anyone to inspect.",
   },
   {
     title: "Review later",

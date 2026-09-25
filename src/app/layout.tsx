@@ -12,14 +12,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description =
+  "Open-source evidence for crypto transfers: a zero-knowledge proof shows a transfer passed specific checks, while the personal information the rules require is sealed for the one institution entitled to read it.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.clearproof.world"),
-  title: "clearproof — Privacy-focused evidence for crypto transfers",
-  description: "Explore pilot-stage zero-knowledge checks, encrypted transfer information and EVM verification. Review current packages, testnet deployments, assurance limits and planned workflows.",
+  title: "clearproof: prove the checks passed, keep the data sealed",
+  description,
   alternates: { canonical: "/" },
   openGraph: {
     title: "clearproof",
-    description: "Pilot-stage zero-knowledge checks and encrypted crypto transfer information. Current capabilities, assurance status and planned workflows.",
+    description,
     url: "https://www.clearproof.world",
     siteName: "clearproof",
     type: "website",
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "clearproof",
-    description: "Pilot-stage zero-knowledge checks and encrypted crypto transfer information. Current capabilities, assurance status and planned workflows.",
+    description,
   },
 };
 

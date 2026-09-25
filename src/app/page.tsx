@@ -1,212 +1,240 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
+import { TransferSpecimen } from "@/components/transfer-specimen";
 
-const CONTRACTS = [
-  { name: "Groth16Verifier", address: "0x6F8e6f64C5601Eb25716f45C78c9B7C9c0bde8EA", purpose: "Cryptographic proof verification" },
-  { name: "VASPRegistry", address: "0x99FE2813FD9D66Df43d1ce37d39341F5A7a557F0", purpose: "VASP registration and issuer roots" },
-  { name: "SanctionsOracle", address: "0x2822db7e67E1152a9cC81E44Df2182CA4662c7a2", purpose: "Sanctions root publication and freshness" },
-  { name: "ComplianceRegistry", address: "0x941F7f188843279C03D1960821B4332A40e806F7", purpose: "Domain-bound proof acceptance and records" },
-  { name: "SanctionsRootRelay", address: "0x911d8244F3b63a40040862dB0CC285A753036F87", purpose: "Sanctions root relay adapter" },
+const REPO = "https://github.com/repfigit/clearproof";
+const DOCS = "https://docs.clearproof.world";
+
+const LIFECYCLE = [
+  {
+    title: "Enroll",
+    body: "The customer’s wallet signs consent to a credential from an authorized issuer. The issuer’s credentials are committed to a signed root that verifiers can pin.",
+  },
+  {
+    title: "Evaluate",
+    body: "The sending institution values the transfer exactly and checks it against the active, reviewed policy. Every outcome is explained: allow, review, deny or indeterminate.",
+  },
+  {
+    title: "Prove",
+    body: "A Groth16 proof binds the credential, the sanctions status of both wallets, the valuation and the transfer itself. It publishes eight values; everything else stays private.",
+  },
+  {
+    title: "Seal and send",
+    body: "The information the rules require is encrypted to the receiving institution’s published key and sent alongside the proof.",
+  },
+  {
+    title: "Authorize once",
+    body: "The receiver checks the proof against current roots, then consumes it. A replay fails. An on-chain registry can mirror the receipt for anyone to inspect.",
+  },
+  {
+    title: "Review later",
+    body: "An encrypted evidence bundle lets an independent reviewer re-check the decision offline, long after the proof itself has expired.",
+  },
 ];
 
-const PACKAGES = [
-  { name: "@clearproof/proof", desc: "TypeScript proof generation and verification SDK." },
-  { name: "@clearproof/circuits", desc: "Circuit package. Check artifact availability before attempting proof generation." },
-  { name: "@clearproof/cli", desc: "Published, but public installation currently fails because its @clearproof/content dependency is unavailable on npm. Source builds are available from GitHub." },
-  { name: "@clearproof/contracts", desc: "Solidity contracts and integration artifacts for EVM development." },
+const LIMITS = [
+  {
+    title: "It does not make a transfer legally compliant.",
+    body: "Which information is required, which counterparties are trusted and how long records are kept depend on the deployment and its jurisdiction.",
+  },
+  {
+    title: "It does not make the inputs true.",
+    body: "A proof shows the checks ran against credentials and lists someone approved. Deciding to trust those sources is a separate step.",
+  },
+  {
+    title: "It does not mean the transfer settled.",
+    body: "Acceptance, the counterparty’s response and on-chain settlement are recorded as separate facts.",
+  },
+  {
+    title: "It is not anonymity.",
+    body: "Public signals and on-chain activity can still reveal patterns. The goal is to share personal data only where it is needed.",
+  },
 ];
 
-const ROADMAP = [
-  { title: "Trustworthy evidence", desc: "Strengthen credential and transfer binding, tenant isolation, verification consistency and recipient key handling." },
-  { title: "Policy comparison", desc: "Explain how a proposed policy changes transfer decisions and manual-review work." },
-  { title: "Transfer investigations", desc: "Join compliance, counterparty, proof and settlement events into an investigation timeline." },
-  { title: "Historical verification", desc: "Export evidence that an independent reviewer can assess after the original proof expires." },
-  { title: "Observation onboarding", desc: "Compare results alongside an existing workflow, using controlled data and simulated counterparties." },
-  { title: "Credential interoperability", desc: "Add a supported issuer and wallet profile when a design partner needs it." },
+const EXPLAINERS = [
+  { slug: "what-clearproof-does", title: "What Clearproof does, and what a valid proof does not establish" },
+  { slug: "pilot-proof-public-signals", title: "The eight public signals: what they show and what they hide" },
+  { slug: "who-verifies-what", title: "Who verifies what: circuit, registry and application" },
+  { slug: "verify-independently", title: "Verifying a Clearproof proof without trusting Clearproof" },
+  { slug: "usd-cents-without-a-price-feed", title: "USD cents without a price feed: how the proof handles valuation" },
 ];
+
+const STATUS = [
+  { term: "Stage", detail: "Pilot. The full workflow runs locally with synthetic data, real proofs, a disposable database and a test chain. No customer deployment yet." },
+  { term: "Assurance", detail: "Circuits and contracts have not been independently audited. Proving keys are for development only." },
+  { term: "Capacity", detail: "The current proof profile, pilot-transfer-v3, supports about 4.3 billion credentials per issuer, a million issuers and a million sanctioned addresses." },
+  { term: "Packages", detail: "The npm packages (0.3.0) predate the pilot. Use the source for current features." },
+  { term: "License", detail: "Apache-2.0." },
+];
+
+const SETUP = `git clone ${REPO}.git
+cd clearproof
+npm exec --yes --package=npm@11.9.0 -- npm ci
+uv sync --frozen --extra dev --python 3.12
+npm run build`;
 
 export default function Home() {
   return (
-    <main className="flex-1">
-      <nav aria-label="Main navigation" className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            <Image src="/logo.png" alt="" width={28} height={28} />
-            <span>clear<span className="bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent">proof</span></span>
+    <>
+      <header className="border-b border-rule">
+        <nav aria-label="Main" className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
+          <Link href="/" className="flex items-center gap-2.5 text-lg font-bold tracking-tight">
+            <Image src="/logo.png" alt="" width={26} height={26} />
+            Clearproof
           </Link>
-          <div className="flex gap-5 text-sm text-muted-foreground">
-            <Link href="#status" className="hover:text-foreground">Status</Link>
-            <Link href="https://docs.clearproof.world" className="hover:text-foreground">Docs</Link>
-            <Link href="#packages" className="hover:text-foreground">Packages</Link>
-            <Link href="https://github.com/repfigit/clearproof" className="hover:text-foreground">GitHub</Link>
+          <ul className="flex flex-wrap gap-x-6 gap-y-1 text-[15px] text-muted">
+            <li><Link href="#how-it-works" className="hover:text-ink">How it works</Link></li>
+            <li><Link href={`${DOCS}/explainers`} className="hover:text-ink">Explainers</Link></li>
+            <li><Link href={DOCS} className="hover:text-ink">Docs</Link></li>
+            <li><Link href={REPO} className="hover:text-ink">GitHub</Link></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main className="flex-1">
+        <section className="mx-auto max-w-6xl px-5 pb-16 pt-12 sm:px-8 sm:pt-14">
+          <div className="max-w-5xl">
+            <h1 className="text-[2.6rem] font-extrabold leading-[1.05] tracking-[-0.025em] sm:text-6xl">
+              Prove the checks passed.{" "}<br className="hidden sm:block" />Keep the customer&rsquo;s data sealed.
+            </h1>
+            <p className="mt-6 max-w-[62ch] text-lg text-muted sm:text-xl sm:leading-relaxed">
+              Clearproof is open-source infrastructure for crypto transfer evidence. A zero-knowledge proof shows a
+              transfer passed specific checks, and the personal details the rules require go, encrypted, only to the
+              institution entitled to read them.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href={REPO} className="inline-flex h-11 items-center rounded-md bg-ink px-5 font-semibold text-white hover:bg-ink/85">
+                Explore the source
+              </Link>
+              <Link href={`${DOCS}/explainers`} className="inline-flex h-11 items-center rounded-md border border-ink/25 px-5 font-semibold hover:border-ink">
+                Read the explainers
+              </Link>
+            </div>
           </div>
-        </div>
-      </nav>
 
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/50 via-background to-background" />
-        <div className="relative mx-auto max-w-5xl px-6 pb-20 pt-24 text-center">
-          <Badge variant="secondary" className="mb-6 text-xs">Pilot-stage software · Sepolia testnet</Badge>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">Privacy-focused evidence<br className="hidden sm:block" /> for crypto transfers.</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            Explore zero-knowledge checks and encrypted transfer information with clearproof.
-            Built for teams evaluating how to verify specific facts while limiting the spread of customer data.
-          </p>
-          <p className="mx-auto mt-5 max-w-2xl text-sm text-muted-foreground">
-            Development software for controlled evaluation. Circuits and contracts have not completed independent audits;
-            current proving artifacts use a development-only trusted setup.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link href="https://docs.clearproof.world" className="inline-flex h-11 items-center rounded-lg bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/80">Read the documentation</Link>
-            <Link href="#status" className="inline-flex h-11 items-center rounded-lg border px-6 text-sm font-medium hover:bg-muted">Review project status</Link>
+          <div className="mt-10">
+            <TransferSpecimen />
           </div>
-          <p className="mt-8 text-xs text-muted-foreground">Repository and package status checked September 24, 2026</p>
-        </div>
-      </section>
+        </section>
 
-      <Separator />
+        <section id="how-it-works" className="scroll-mt-8 border-t border-rule bg-sheet">
+          <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">The life of a transfer</h2>
+            <p className="mt-4 max-w-[62ch] text-lg text-muted">
+              Six steps, from enrolling a customer to letting an auditor re-check the decision long afterwards. Each
+              step leaves evidence the next one can verify.
+            </p>
+            <ol className="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+              {LIFECYCLE.map((step, index) => (
+                <li key={step.title} className="border-t-2 border-ink pt-4">
+                  <p className="text-sm font-semibold text-seal">Step {index + 1}</p>
+                  <h3 className="mt-1 text-xl font-bold">{step.title}</h3>
+                  <p className="mt-2 max-w-[48ch] text-muted">{step.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
 
-      <section id="status" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
-        <h2 className="text-3xl font-bold tracking-tight">What you can evaluate today</h2>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          The project includes Circom/Groth16 circuits, a TypeScript SDK, CLI tools, a Python API,
-          encrypted payload components and EVM contracts. These components are a foundation for a pilot.
-        </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {[
-            { title: "Specific proof checks", desc: "Circuits model sanctions non-membership, credential checks and amount tiers. A proof establishes its encoded statement; authentic inputs, holder authority and the surrounding policy still require verification." },
-            { title: "Encrypted information", desc: "Hybrid payload components carry a proof alongside encrypted personal information. Authorized recipients still receive required information. Key discovery, rotation and operational controls need integration validation." },
-            { title: "Protocol prototypes", desc: "TRP, TRISA and TAIP-10 bridge components exist. Complete bilateral interoperability and provider-specific workflows remain to be demonstrated." },
-            { title: "Verification boundaries", desc: "The development pilot checks the same proof statement in Python and Solidity. The API and SDK use server-selected trust; PostgreSQL owns authorization, and the contract mirrors approved receipts under trusted source checkpoints." },
-          ].map((item) => (
-            <Card key={item.title}><CardContent className="pt-6">
-              <h3 className="font-semibold">{item.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
-            </CardContent></Card>
-          ))}
-        </div>
-        <div className="mt-8 rounded-lg border p-6 text-sm text-muted-foreground">
-          <p><strong className="text-foreground">Source availability:</strong> the main GitHub repository, <Link href="https://github.com/repfigit/clearproof" className="break-all font-mono underline underline-offset-4">repfigit/clearproof</Link>, is public. The local adoption pilot is merged into main through PR #27 and remains unreleased on npm; published packages and historical deployments are separate.</p>
-          <p className="mt-3"><strong className="text-foreground">Versions:</strong> published npm packages are at 0.3.0; the development checkout is 0.4.0. Features in development may not be available in the published packages.</p>
-          <p className="mt-3"><strong className="text-foreground">Installation:</strong> the public proof SDK installs successfully. The published CLI currently has an unavailable dependency; use a source checkout for CLI evaluation.</p>
-          <p className="mt-3"><strong className="text-foreground">Assurance:</strong> no completed independent circuit or contract audit, production trusted setup, or end-to-end regulatory compliance certification is claimed. Use synthetic data and testnet funds for evaluation.</p>
-        </div>
-      </section>
-
-      <Separator />
-
-      <section className="mx-auto max-w-5xl px-6 py-20">
-        <h2 className="text-3xl font-bold tracking-tight">The intended transfer workflow</h2>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          A virtual asset service provider (VASP), such as an exchange or custodian, combines checks,
-          protected information exchange and a scoped verification decision.
-        </p>
-        <div className="mt-10 grid gap-6 sm:grid-cols-3">
-          {[
-            { step: "01", title: "Evaluate", desc: "Use authenticated credential and screening inputs to evaluate the required policy. Generate a proof for the predicates supported by the chosen circuit." },
-            { step: "02", title: "Exchange", desc: "Encrypt required personal information for an authorized recipient and exchange it through a compatible, tested protocol integration." },
-            { step: "03", title: "Verify and record", desc: "Check the proof, trusted state, transfer context and freshness. Record what was checked and distinguish acceptance from successful settlement." },
-          ].map((item) => (
-            <Card key={item.step}><CardContent className="pt-6">
-              <p className="font-mono text-sm text-muted-foreground">{item.step}</p>
-              <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
-            </CardContent></Card>
-          ))}
-        </div>
-        <p className="mt-6 text-sm text-muted-foreground">
-          A zero-knowledge proof and encrypted payload do not by themselves establish legal compliance.
-          Required information, trusted counterparties, screening, retention and applicable rules depend on the deployment.
-          Public proof metadata can also reveal information; the design does not promise complete anonymity.
-        </p>
-      </section>
-
-      <Separator />
-
-      <section id="roadmap" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-3xl font-bold tracking-tight">Development pilot and next steps</h2>
-          <Badge variant="outline">In development · Unreleased</Badge>
-        </div>
-        <p className="mt-3 max-w-2xl text-muted-foreground">The unreleased pilot focuses on evidence and recurring operational work for a stablecoin processor or custodian. The capabilities below have local synthetic acceptance evidence; customer adoption and managed distribution remain to be validated.</p>
-        <div className="mt-6 rounded-lg border p-6 text-sm text-muted-foreground">
-          <h3 className="font-semibold text-foreground">Latest development progress</h3>
-          <p className="mt-3">An open draft change adds wallet-signed credential enrollment, revocation records, encrypted storage scoped to each tenant, signed issuer roots and a contract for recording approved roots. Transfer checks bind participant, asset, valuation, policy and timing fields to a commitment.</p>
-          <p className="mt-3">The draft also adds development proof generation and cryptographic verification, signed valuation inputs, and policy evaluation that explains allow, review, deny or indeterminate outcomes. Policy comparison reports show how proposed rules change decisions using supplied or retained evidence. Policy review and activation are separate operations, with retained activation history and explicit rollback to a reviewed, effective version.</p>
-          <p className="mt-3">The draft local authorization service checks the active policy, credential revocation, approved roots, signed external facts and the cryptographic proof. An allow decision requires approved transfer information and encrypts it for a trusted recipient key. Evidence, a receipt and replay protection are recorded together; a failure rolls back the operation. A local simulated counterparty checks signed evidence and encrypted information and returns accept, reject, information-request or pending outcomes. Remote delivery and payment execution remain outside this local acceptance scope.</p>
-          <p className="mt-3">Encrypted evidence exports preserve the original proof, policy and source-record versions for an approved reviewer. Offline inspection checks integrity and cryptographic validity; independently configured trust also enables statement reconstruction and conditional policy replay after proof expiry. Review also checks independently configured decision and source authorities, historical revocation and RFC 3161 timing evidence. Results distinguish supported, contradicted and indeterminate evidence; missing trust never becomes approval.</p>
-          <p className="mt-3">Transfer investigation tools combine compliance, proof, counterparty, custody, chain and evidence observations into timelines and paginated queues. Reports identify conflicts and unresolved steps with suggested owners and next actions. Access is authenticated and scoped to each tenant; reports do not authorize transfers.</p>
-          <p className="mt-3">A Fireblocks webhook adapter verifies a supported signature and event profile and retains encrypted source evidence through an authenticated relay. Validation uses synthetic signed events and a local database. Live provider interoperability and automatic signing-key refresh remain unvalidated or unimplemented.</p>
-          <p className="mt-3">Observation mode records explained outcomes without authorizing transfers. Selected-cohort reports keep missing cases, disagreement and measured evaluation time explicit. A source-checkout runner owns a disposable database and test chain, exercises real development proofs and retains encrypted historical exports for offline review. These local results do not establish live provider interoperability, customer value or production assurance. Independent security review remains open. This work is not included in the published 0.3.0 packages or the Sepolia deployments listed below.</p>
-        </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {ROADMAP.map((item) => (
-            <Card key={item.title}><CardContent className="pt-6">
-              <h3 className="font-semibold">{item.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
-            </CardContent></Card>
-          ))}
-        </div>
-      </section>
-
-      <Separator />
-
-      <section id="packages" className="mx-auto max-w-5xl scroll-mt-24 px-6 py-20">
-        <h2 className="text-3xl font-bold tracking-tight">Published packages</h2>
-        <p className="mt-3 text-muted-foreground">Version 0.3.0 is available on npm for each package below, checked September 24, 2026. @clearproof/cli is published but does not install cleanly because its @clearproof/content dependency is unavailable on npm; source builds are available from GitHub. Review each package’s contents and requirements before integrating.</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {PACKAGES.map((item) => (
-            <Link key={item.name} href={`https://www.npmjs.com/package/${item.name}`} className="group">
-              <Card className="h-full transition-colors group-hover:border-foreground/20"><CardContent className="pt-6">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="break-all font-mono text-sm">{item.name}</span>
-                  <Badge variant="secondary" className="font-mono text-xs">0.3.0</Badge>
+        <section className="border-t border-rule">
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1fr_1.4fr]">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">What a valid proof does not tell you</h2>
+              <p className="mt-4 max-w-[46ch] text-lg text-muted">
+                A proof is precise about a narrow statement. Knowing its edges is how you use it well.
+              </p>
+            </div>
+            <dl className="divide-y divide-rule border-y border-rule">
+              {LIMITS.map((limit) => (
+                <div key={limit.title} className="py-5">
+                  <dt className="text-lg font-semibold">{limit.title}</dt>
+                  <dd className="mt-1 max-w-[62ch] text-muted">{limit.body}</dd>
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
-              </CardContent></Card>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-8 rounded-lg border bg-card p-6">
-          <h3 className="font-semibold">Start with the SDK</h3>
-          <pre className="mt-4 overflow-x-auto text-sm"><code>npm install @clearproof/proof@0.3.0</code></pre>
-          <p className="mt-4 text-sm text-muted-foreground">Proof generation also requires compatible circuit WASM and proving-key files; verification requires the matching verification key. The package installation alone is not a complete proving setup.</p>
-          <Link href="https://docs.clearproof.world/docs/quickstart" className="mt-4 inline-block text-sm underline underline-offset-4">Read setup requirements</Link>
-        </div>
-      </section>
-
-      <Separator />
-
-      <section className="mx-auto max-w-5xl px-6 py-20">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-3xl font-bold tracking-tight">Recorded testnet deployments</h2>
-          <Badge variant="outline">Sepolia only</Badge>
-        </div>
-        <p className="mt-3 max-w-2xl text-muted-foreground">Addresses from the July 20, 2026 deployment record. Contract bytecode was checked on Sepolia on September 24, 2026. These are historical test deployments; code presence does not establish that they match the current development checkout. Deployment and explorer listings do not establish an independent security audit.</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {CONTRACTS.map((item) => (
-            <Card key={item.name}><CardContent className="pt-6">
-              <h3 className="font-semibold">{item.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{item.purpose}</p>
-              <Link href={`https://sepolia.etherscan.io/address/${item.address}#code`} className="mt-3 inline-block break-all font-mono text-xs text-muted-foreground hover:text-foreground">{item.address}</Link>
-            </CardContent></Card>
-          ))}
-        </div>
-      </section>
-
-      <footer className="border-t py-10">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 sm:flex-row sm:justify-between">
-          <p className="text-sm text-muted-foreground">clearproof · Controlled evaluation, September 2026</p>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link href="#status" className="hover:text-foreground">Project status</Link>
-            <Link href="https://docs.clearproof.world" className="hover:text-foreground">Docs</Link>
-            <Link href="https://www.npmjs.com/org/clearproof" className="hover:text-foreground">npm</Link>
+              ))}
+            </dl>
           </div>
+        </section>
+
+        <section className="border-t border-rule bg-ink text-white">
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1fr_1.3fr]">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Run the pilot yourself</h2>
+              <p className="mt-4 max-w-[46ch] text-lg text-white/75">
+                Build from source, then follow the local acceptance guide. It generates development keys, starts a
+                throwaway database and test chain, and takes a synthetic transfer through every step above with
+                real proofs.
+              </p>
+              <Link
+                href={`${REPO}/blob/main/docs/operations/local-pilot-acceptance.md`}
+                className="mt-6 inline-block font-semibold underline decoration-white/40 underline-offset-4 hover:decoration-white"
+              >
+                Open the local acceptance guide
+              </Link>
+            </div>
+            <div className="min-w-0">
+              <pre className="overflow-x-auto rounded-md bg-black/35 p-5 font-mono text-sm leading-relaxed text-white/90">
+                <code>{SETUP}</code>
+              </pre>
+              <p className="mt-3 text-sm text-white/60">
+                Needs Node, Python 3.12 with uv, Circom 2.2.2 and PostgreSQL 18. Use synthetic data only.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-rule">
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1fr_1.4fr]">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Learn how it works</h2>
+              <p className="mt-4 max-w-[46ch] text-lg text-muted">
+                Short, source-checked explainers. Each links to the code and specs it describes.
+              </p>
+              <Link href={`${DOCS}/feed.xml`} className="mt-6 inline-block font-semibold text-seal underline underline-offset-4">
+                Follow updates by RSS
+              </Link>
+            </div>
+            <ul className="divide-y divide-rule border-y border-rule">
+              {EXPLAINERS.map((item) => (
+                <li key={item.slug}>
+                  <Link href={`${DOCS}/explainers/${item.slug}`} className="group flex items-baseline justify-between gap-6 py-4 text-lg font-medium">
+                    <span className="group-hover:text-seal">{item.title}</span>
+                    <span aria-hidden="true" className="shrink-0 text-muted group-hover:text-seal">Read</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section id="status" className="border-t border-rule bg-sheet">
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1fr_1.4fr]">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Where the project stands</h2>
+              <p className="mt-4 max-w-[46ch] text-lg text-muted">Checked September 25, 2026.</p>
+            </div>
+            <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-[9rem_1fr]">
+              {STATUS.map((item) => (
+                <div key={item.term} className="contents">
+                  <dt className="font-semibold">{item.term}</dt>
+                  <dd className="max-w-[62ch] text-muted">{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-rule">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-[15px] text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <p>Clearproof is open source under Apache-2.0.</p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-1">
+            <li><Link href={REPO} className="hover:text-ink">GitHub</Link></li>
+            <li><Link href={DOCS} className="hover:text-ink">Docs</Link></li>
+            <li><Link href={`${DOCS}/docs/contracts`} className="hover:text-ink">Testnet contracts</Link></li>
+            <li><Link href={`${DOCS}/feed.xml`} className="hover:text-ink">RSS</Link></li>
+          </ul>
         </div>
       </footer>
-    </main>
+    </>
   );
 }

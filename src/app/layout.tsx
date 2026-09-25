@@ -1,33 +1,36 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono, Public_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
+
+const description =
+  "Open-source evidence for crypto transfers: a zero-knowledge proof shows a transfer passed specific checks, while the personal information the rules require is sealed for the one institution entitled to read it.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.clearproof.world"),
-  title: "clearproof — Privacy-focused evidence for crypto transfers",
-  description: "Explore pilot-stage zero-knowledge checks, encrypted transfer information and EVM verification. Review current packages, testnet deployments, assurance limits and planned workflows.",
+  title: "Clearproof: prove the checks passed, keep the data sealed",
+  description,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "clearproof",
-    description: "Pilot-stage zero-knowledge checks and encrypted crypto transfer information. Current capabilities, assurance status and planned workflows.",
+    title: "Clearproof",
+    description,
     url: "https://www.clearproof.world",
-    siteName: "clearproof",
+    siteName: "Clearproof",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "clearproof",
-    description: "Pilot-stage zero-knowledge checks and encrypted crypto transfer information. Current capabilities, assurance status and planned workflows.",
+    title: "Clearproof",
+    description,
   },
 };
 
@@ -37,11 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${publicSans.variable} ${jetbrainsMono.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

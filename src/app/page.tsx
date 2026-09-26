@@ -66,7 +66,7 @@ const STATUS = [
   { term: "Stage", detail: "Pilot. The full workflow runs locally with synthetic data, real proofs, a disposable database and a test chain. No customer deployment yet." },
   { term: "Assurance", detail: "Circuits and contracts have not been independently audited. Proving keys are for development only." },
   { term: "Capacity", detail: "The current proof profile, pilot-transfer-v3, supports about 4.3 billion credentials per issuer, a million issuers and a million sanctioned addresses." },
-  { term: "Packages", detail: "Version 0.5.0 on npm includes the pilot: npm install @clearproof/cli installs the command-line tool, and the SDK and contracts carry signed build provenance." },
+  { term: "Packages", detail: "Version 0.6.0 on npm includes the pilot: npm install @clearproof/cli installs the command-line tool, @clearproof/circuits publishes the circuit sources, and every package carries signed build provenance." },
 ];
 
 const SETUP = `git clone ${REPO}.git

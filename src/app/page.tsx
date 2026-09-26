@@ -260,6 +260,7 @@ export default function Home() {
             <Link href={REPO} className="hover:text-foreground">GitHub</Link>
             <Link href={DOCS} className="hover:text-foreground">Docs</Link>
             <Link href={`${DOCS}/docs/contracts`} className="hover:text-foreground">Testnet contracts</Link>
+            <Link href={`${REPO}/issues/new/choose`} className="hover:text-foreground">Report an issue</Link>
             <Link href={`${DOCS}/feed.xml`} className="hover:text-foreground">RSS</Link>
           </div>
         </div>

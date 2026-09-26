@@ -66,7 +66,7 @@ const STATUS = [
   { term: "Stage", detail: "Pilot. The full workflow runs locally with synthetic data, real proofs, a disposable database and a test chain. No customer deployment yet." },
   { term: "Assurance", detail: "Circuits and contracts have not been independently audited. Proving keys are for development only." },
   { term: "Capacity", detail: "The current proof profile, pilot-transfer-v3, supports about 4.3 billion credentials per issuer, a million issuers and a million sanctioned addresses." },
-  { term: "Packages", detail: "The npm packages (0.3.0) predate the pilot. Use the source for current features." },
+  { term: "Packages", detail: "Version 0.5.0 on npm includes the pilot: npm install @clearproof/cli installs the command-line tool, and the SDK and contracts carry signed build provenance." },
 ];
 
 const SETUP = `git clone ${REPO}.git
@@ -239,7 +239,7 @@ export default function Home() {
       <section id="status" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-20">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-3xl font-bold tracking-tight">Where the project stands</h2>
-          <Badge variant="outline" className="border-white/15">Checked September 25, 2026</Badge>
+          <Badge variant="outline" className="border-white/15">Checked September 26, 2026</Badge>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {STATUS.map((item) => (

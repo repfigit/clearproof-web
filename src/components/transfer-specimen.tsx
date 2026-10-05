@@ -17,9 +17,9 @@ const FIELDS = [
 const FACTS = [
   "The sender holds a valid, unexpired credential from an authorized issuer.",
   "Neither wallet is on the sanctions list the verifier trusts.",
-  "The amount was valued exactly and tiered against the active policy.",
+  "The amount was valued exactly against the bound valuation and tier thresholds.",
   "The proof belongs to this transfer on this chain and registry.",
-  "It can authorize the transfer once, and it expires within five minutes.",
+  "The proof's encoded expiry is at most five minutes after evaluation.",
 ];
 
 // How long each view stays on screen during autoplay.
@@ -119,7 +119,7 @@ export function TransferSpecimen() {
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-3">
         <p className="text-sm text-muted-foreground">
-          The same transfer, sent two ways. Watch it switch, or choose a view.
+          Illustrative synthetic transfer. Watch it switch, or choose a view.
         </p>
         <div className="flex items-center gap-2">
           <div role="group" aria-label="How the transfer is sent" className="flex rounded-full border border-white/10 bg-background/60 p-0.5 text-sm">
@@ -202,7 +202,7 @@ export function TransferSpecimen() {
         <div className="border-t border-white/10 px-5 py-6 md:border-t-0" aria-live={announce ? "polite" : "off"}>
           {sealed ? (
             <>
-              <h3 className="font-semibold">What anyone checking the proof learns</h3>
+              <h3 className="font-semibold">Checks encoded in the proof</h3>
               <ul className="mt-4 space-y-3">
                 {FACTS.map((fact, index) => (
                   <li
@@ -218,6 +218,11 @@ export function TransferSpecimen() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-5 text-sm text-muted-foreground">
+                The application separately checks current roots, revocation and policy. Only an ALLOW
+                decision can consume an authorization, and storage enforces one-time consumption.
+                Checking the proof alone does not authorize or settle a transfer.
+              </p>
               <p className="mt-5 border-t border-white/10 pt-4 text-sm text-muted-foreground">
                 The personal details still reach the receiving institution, encrypted to its key. Nobody else
                 along the way can read them.
@@ -227,8 +232,8 @@ export function TransferSpecimen() {
             <>
               <h3 className="font-semibold">Where this ends up</h3>
               <p className="mt-4 text-[15px] text-foreground/90">
-                Once decrypted, the full record sits in plain form in every system that processes, logs or
-                stores it: compliance tools, support queues, analytics exports and backups on both sides.
+                Once decrypted, the full record can spread into compliance tools, support queues,
+                analytics exports and backups unless each system limits its handling.
               </p>
               <p className="mt-3 text-[15px] text-foreground/90">
                 Each copy is another place a customer&rsquo;s identity can leak, and the receiving side still has

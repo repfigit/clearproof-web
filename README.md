@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# clearproof.world
 
-## Getting Started
+Public website for Clearproof's development pilot. The implementation is in the
+[core repository](https://github.com/repfigit/clearproof); technical documentation
+is at [docs.clearproof.world](https://docs.clearproof.world).
 
-First, run the development server:
+## Development
 
-```bash
+Use Node.js 24 or later and the committed lockfile:
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The synthetic transfer animation illustrates the
+information flow; it does not generate or authorize a cryptographic proof.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Release and publication source
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The homepage loads `https://docs.clearproof.world/api/content/project` on each
+request. The core repository's `packages/content/src/project.ts` owns release,
+profile, assurance and capacity statements. Its approved explainer catalogue
+owns titles and publication dates. Scheduled articles and paused publications
+are excluded by the documentation service and checked again by this website.
 
-## Learn More
+Set `CLEARPROOF_CONTENT_URL` to a documentation preview's `/api/content/project`
+URL for local development or previews. This is an operator-controlled server
+variable, not visitor input. Requests time out after five seconds. If the source
+is unavailable or malformed, the homepage displays a status-unavailable notice
+and links to the index without guessing article URLs or showing a stale release.
+Deploy the documentation endpoint before a website change that depends on it.
+Publishing a new explainer needs no website commit.
 
-To learn more about Next.js, take a look at the following resources:
+## Validation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run lint
+npm run test:unit
+npm run build
+npm run typecheck
+npm exec -- playwright install --with-deps chromium firefox webkit
+npm run test:e2e
+npm audit --omit=dev --audit-level=high
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Browser tests own a fixture catalogue and a production Next.js server. They
+cover desktop, mobile, Firefox, WebKit, reduced motion, metadata routes and
+future publication filtering without depending on the public docs service.
+After deploying both projects, `npm run test:links` checks promoted public links,
+robots/sitemap and the shared release version against the live sites. CI runs
+local checks on pull requests and daily, and live checks daily.
 
-## Deploy on Vercel
+## Dependency maintenance
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Dependabot checks npm and GitHub Actions weekly. Production audit results are a
+CI gate; inspect the full `npm audit` report as well. On October 5, 2026, the
+production audit reported zero advisories. Five high-severity entries remain in
+the development-only ESLint → fast-glob → micromatch → braces chain; braces
+3.0.3 has no patched release available. These tools process repository files in
+CI, not visitor-supplied patterns. The production-only audit does not establish
+that the entire development dependency tree is unaffected. Recheck upstream
+fixes rather than forcing an incompatible ESLint downgrade.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Hosting
+
+The linked Vercel project is `clearproof-web`. Production uses
+https://www.clearproof.world. Validate a preview before promoting it and run the
+live link check afterward. Keep deployment credentials and `.env.local` out of
+Git. A successful local build alone does not prove the public deployment updated.

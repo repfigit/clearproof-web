@@ -4,9 +4,9 @@ import { Separator } from "@/components/ui/separator";
 import { TransferSpecimen } from "@/components/transfer-specimen";
 import Image from "next/image";
 import Link from "next/link";
+import { DOCS, loadProjectCatalogue } from "@/lib/project-catalogue";
 
 const REPO = "https://github.com/repfigit/clearproof";
-const DOCS = "https://docs.clearproof.world";
 
 const LIFECYCLE = [
   {
@@ -54,22 +54,6 @@ const LIMITS = [
   },
 ];
 
-const EXPLAINERS = [
-  { slug: "what-clearproof-does", title: "What clearproof does, and what a valid proof does not establish" },
-  { slug: "pilot-proof-public-signals", title: "The eight public signals: what they show and what they hide" },
-  { slug: "who-verifies-what", title: "Who verifies what: circuit, registry and application" },
-  { slug: "verify-independently", title: "Verifying a clearproof proof without trusting clearproof" },
-  { slug: "usd-cents-without-a-price-feed", title: "USD cents without a price feed: how the proof handles valuation" },
-  { slug: "investigating-missing-information", title: "Investigating missing information: the pilot observability and investigation workflow" },
-  { slug: "what-the-proof-does-not-check", title: "What the proof does not check: trusted issuers, published roots and configuration" },
-];
-
-const STATUS = [
-  { term: "Stage", detail: "Pilot. The full workflow runs locally with synthetic data, real proofs, a disposable database and a test chain. No customer deployment yet." },
-  { term: "Assurance", detail: "Circuits and contracts have not been independently audited. Proving keys are for development only." },
-  { term: "Capacity", detail: "The current proof profile, pilot-transfer-v3, supports about 4.3 billion credentials per issuer, a million issuers and a million sanctioned addresses." },
-  { term: "Packages", detail: "Version 0.6.0 on npm includes the pilot: npm install @clearproof/cli installs the command-line tool, @clearproof/circuits publishes the circuit sources, and every package carries signed build provenance." },
-];
 
 const SETUP = `git clone ${REPO}.git
 cd clearproof
@@ -77,7 +61,14 @@ npm exec --yes --package=npm@11.9.0 -- npm ci
 uv sync --frozen --extra dev --python 3.12
 npm run build`;
 
-export default function Home() {
+export default async function Home() {
+  const catalogue = await loadProjectCatalogue();
+  const status = catalogue ? [
+    { term: "Stage", detail: catalogue.stage },
+    { term: "Assurance", detail: catalogue.assurance },
+    { term: "Capacity", detail: catalogue.capacity },
+    { term: "Packages", detail: `Verified npm release: ${catalogue.npmVersion}. Current proof profile: ${catalogue.proofProfile}. The CLI installs with npm install @clearproof/cli; circuits publishes source only. Matching development artifacts are required for proving.` },
+  ] : [{ term: "Current status", detail: "The release catalogue is temporarily unavailable. Open the project status documentation for the latest verified release and development limits." }];
   return (
     <main className="flex-1">
       <nav aria-label="Main navigation" className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
@@ -223,7 +214,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {EXPLAINERS.map((item) => (
+          {(catalogue?.explainers ?? []).map((item) => (
             <Link key={item.slug} href={`${DOCS}/explainers/${item.slug}`} className="group">
               <Card className="h-full border-white/10 bg-card/60 transition-colors group-hover:border-cyan-400/40">
                 <CardContent className="pt-6">
@@ -234,6 +225,11 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        {!catalogue?.explainers.length && (
+          <p className="mt-6 text-muted-foreground">
+            <Link href={`${DOCS}/explainers`} className="underline underline-offset-4">Browse currently published explainers</Link>.
+          </p>
+        )}
       </section>
 
       <Separator />
@@ -241,10 +237,10 @@ export default function Home() {
       <section id="status" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-20">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-3xl font-bold tracking-tight">Where the project stands</h2>
-          <Badge variant="outline" className="border-white/15">Checked October 5, 2026</Badge>
+          {catalogue && <Badge variant="outline" className="border-white/15">Verified {catalogue.checkedAt}</Badge>}
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {STATUS.map((item) => (
+          {status.map((item) => (
             <Card key={item.term} className="border-white/10 bg-card/60">
               <CardContent className="pt-6">
                 <h3 className="font-semibold">{item.term}</h3>
@@ -253,6 +249,7 @@ export default function Home() {
             </Card>
           ))}
         </div>
+        <Link href={`${DOCS}/docs/status`} className="mt-6 inline-block text-sm text-cyan-300 underline underline-offset-4">Read the full project status</Link>
       </section>
 
       <footer className="border-t py-10">

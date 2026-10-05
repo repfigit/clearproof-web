@@ -60,6 +60,8 @@ const EXPLAINERS = [
   { slug: "who-verifies-what", title: "Who verifies what: circuit, registry and application" },
   { slug: "verify-independently", title: "Verifying a clearproof proof without trusting clearproof" },
   { slug: "usd-cents-without-a-price-feed", title: "USD cents without a price feed: how the proof handles valuation" },
+  { slug: "investigating-missing-information", title: "Investigating missing information: the pilot observability and investigation workflow" },
+  { slug: "what-the-proof-does-not-check", title: "What the proof does not check: trusted issuers, published roots and configuration" },
 ];
 
 const STATUS = [
@@ -239,7 +241,7 @@ export default function Home() {
       <section id="status" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-20">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-3xl font-bold tracking-tight">Where the project stands</h2>
-          <Badge variant="outline" className="border-white/15">Checked September 26, 2026</Badge>
+          <Badge variant="outline" className="border-white/15">Checked October 5, 2026</Badge>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {STATUS.map((item) => (

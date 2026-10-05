@@ -23,6 +23,7 @@ export function parseProjectCatalogue(value: unknown, now = Date.now()): Project
   if (!record(value) || value.schemaVersion !== 1
     || !text(value.checkedAt, 10) || !/^\d{4}-\d{2}-\d{2}$/.test(value.checkedAt)
     || !Number.isFinite(Date.parse(value.checkedAt))
+    || new Date(value.checkedAt).toISOString().slice(0, 10) !== value.checkedAt
     || !text(value.npmVersion, 32) || !/^\d+\.\d+\.\d+$/.test(value.npmVersion)
     || !text(value.proofProfile, 64) || !/^pilot-transfer-v[1-9]\d*$/.test(value.proofProfile)
     || !text(value.stage) || !text(value.assurance) || !text(value.capacity)
@@ -33,7 +34,9 @@ export function parseProjectCatalogue(value: unknown, now = Date.now()): Project
   const explainers = value.explainers.map(item => {
     if (!record(item) || !text(item.slug, 100) || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.slug)
       || seen.has(item.slug) || !text(item.title, 512) || !text(item.publishAfter, 32)
-      || !Number.isFinite(Date.parse(item.publishAfter))) {
+      || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(item.publishAfter)
+      || !Number.isFinite(Date.parse(item.publishAfter))
+      || new Date(item.publishAfter).toISOString().slice(0, 10) !== item.publishAfter.slice(0, 10)) {
       throw new Error("Invalid public explainer");
     }
     seen.add(item.slug);

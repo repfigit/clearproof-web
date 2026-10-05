@@ -23,9 +23,13 @@ it("uses catalogue release facts and filters future articles at the publication 
 it.each([
   null, [], { ...catalogue, schemaVersion: 2 }, { ...catalogue, npmVersion: "latest" },
   { ...catalogue, checkedAt: "invalid" }, { ...catalogue, proofProfile: "unknown" },
+  { ...catalogue, checkedAt: "2026-02-31" },
   { ...catalogue, capacity: "" }, { ...catalogue, explainers: {} },
   { ...catalogue, explainers: [{ ...catalogue.explainers[0], slug: "../private" }] },
   { ...catalogue, explainers: [{ ...catalogue.explainers[0], publishAfter: "invalid" }] },
+  { ...catalogue, explainers: [{ ...catalogue.explainers[0], publishAfter: "2026-02-31T00:00:00Z" }] },
+  { ...catalogue, explainers: [{ ...catalogue.explainers[0], publishAfter: "1" }] },
+  { ...catalogue, explainers: [{ ...catalogue.explainers[0], publishAfter: "2026-10-05" }] },
   { ...catalogue, explainers: [catalogue.explainers[0], catalogue.explainers[0]] },
 ])("rejects malformed public data rather than promoting unverified links", value => {
   expect(() => parseProjectCatalogue(value, NOW)).toThrow();

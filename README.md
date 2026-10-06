@@ -63,13 +63,20 @@ local checks on pull requests and daily, and live checks daily.
 ## Dependency maintenance
 
 Dependabot checks npm and GitHub Actions weekly. Production audit results are a
-CI gate; inspect the full `npm audit` report as well. On October 5, 2026, the
-production audit reported zero advisories. Five high-severity entries remain in
+CI gate; inspect the full `npm audit` report as well. On October 6, 2026, the
+production audit reported zero advisories after updating Base UI to 1.8.0,
+Tailwind CSS and its PostCSS plugin to 4.3.3, and React types to 19.3.0. Five high-severity entries remain in
 the development-only ESLint → fast-glob → micromatch → braces chain; braces
 3.0.3 has no patched release available. These tools process repository files in
 CI, not visitor-supplied patterns. The production-only audit does not establish
 that the entire development dependency tree is unaffected. Recheck upstream
 fixes rather than forcing an incompatible ESLint downgrade.
+
+ESLint remains on 9.39.4. The existing [ESLint 10 update](https://github.com/repfigit/clearproof-web/pull/15)
+fails `npm run lint` because the current React lint plugin calls the removed
+`getFilename` API. Its [CI log](https://github.com/repfigit/clearproof-web/actions/runs/37385040040/job/112016120225)
+records the failure. Upgrade after the Next.js lint configuration and its React
+plugin support ESLint 10; keep lint enabled in the meantime.
 
 ## Hosting
 

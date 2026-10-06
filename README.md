@@ -32,6 +32,15 @@ and links to the index without guessing article URLs or showing a stale release.
 Deploy the documentation endpoint before a website change that depends on it.
 Publishing a new explainer needs no website commit.
 
+## Evaluation entry
+
+The homepage links both the small historical-proof verification example and the
+complete current local pilot. Its evaluation link opens the documentation guide,
+report template and voluntary GitHub feedback form. Deploy and verify
+`https://docs.clearproof.world/docs/evaluate` before promoting a website revision
+that depends on this route. Site visits or link clicks do not establish an
+external evaluation or adoption.
+
 ## Validation
 
 ```sh

@@ -11,6 +11,15 @@ test("homepage uses the publication source, works on mobile, and explains author
     "href", "https://docs.clearproof.world/explainers/published-example",
   );
   await expect(page.getByRole("link", { name: /Future synthetic article/ })).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Evaluate", exact: true })).toHaveAttribute(
+    "href", "https://docs.clearproof.world/docs/evaluate",
+  );
+  await expect(page.getByRole("link", { name: "Start with the smaller verification example", exact: true })).toHaveAttribute(
+    "href", "https://docs.clearproof.world/docs/quickstart#quick-verification-example",
+  );
+  await expect(page.getByRole("link", { name: "Plan an evaluation and share feedback", exact: true })).toHaveAttribute(
+    "href", "https://docs.clearproof.world/docs/evaluate",
+  );
   await page.getByRole("button", { name: "With clearproof", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Checks encoded in the proof" })).toBeVisible();
   await expect(page.getByText(/storage enforces one-time consumption/)).toBeVisible();

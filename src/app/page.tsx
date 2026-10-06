@@ -80,6 +80,7 @@ export default async function Home() {
           <div className="flex flex-wrap gap-5 text-sm text-muted-foreground">
             <Link href="#how-it-works" className="hover:text-foreground">How it works</Link>
             <Link href={`${DOCS}/explainers`} className="hover:text-foreground">Explainers</Link>
+            <Link href={`${DOCS}/docs/evaluate`} className="hover:text-foreground">Evaluate</Link>
             <Link href={DOCS} className="hover:text-foreground">Docs</Link>
             <Link href={REPO} className="hover:text-foreground">GitHub</Link>
           </div>
@@ -177,11 +178,21 @@ export default async function Home() {
               proofs.
             </p>
             <Link
+              href={`${DOCS}/docs/quickstart#quick-verification-example`}
+              className="mt-6 block text-sm font-medium text-cyan-300 underline underline-offset-4 hover:text-cyan-200"
+            >
+              Start with the smaller verification example
+            </Link>
+            <Link
               href={`${REPO}/blob/main/docs/operations/local-pilot-acceptance.md`}
               className="mt-6 inline-block text-sm font-medium text-cyan-300 underline underline-offset-4 hover:text-cyan-200"
             >
               Open the local acceptance guide
             </Link>
+            <p className="mt-4 max-w-xl text-sm text-muted-foreground">
+              Record what worked, what failed and what evidence helped your review.
+              {" "}<Link href={`${DOCS}/docs/evaluate`} className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200">Plan an evaluation and share feedback</Link>.
+            </p>
           </div>
           <div className="min-w-0 rounded-xl border border-white/10 bg-black/40 shadow-[0_0_60px_-24px_#22d3ee]">
             <div className="flex gap-1.5 border-b border-white/10 px-4 py-3" aria-hidden="true">
@@ -257,6 +268,7 @@ export default async function Home() {
           <p className="text-sm text-muted-foreground">clearproof · Open source under Apache-2.0</p>
           <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
             <Link href={REPO} className="hover:text-foreground">GitHub</Link>
+            <Link href={`${DOCS}/docs/evaluate`} className="hover:text-foreground">Evaluate</Link>
             <Link href={DOCS} className="hover:text-foreground">Docs</Link>
             <Link href={`${DOCS}/docs/contracts`} className="hover:text-foreground">Testnet contracts</Link>
             <Link href={`${REPO}/issues/new/choose`} className="hover:text-foreground">Report an issue</Link>

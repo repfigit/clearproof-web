@@ -201,7 +201,7 @@ export default async function Home() {
               </Link>
               , then{" "}
               <Link href={`${DOCS}/docs/evaluate`} className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200">
-                plan an evaluation and share feedback
+                Plan an evaluation and share feedback
               </Link>.
             </p>
           </div>

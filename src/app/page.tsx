@@ -191,7 +191,18 @@ export default async function Home() {
             </Link>
             <p className="mt-4 max-w-xl text-sm text-muted-foreground">
               Record what worked, what failed and what evidence helped your review.
-              {" "}<Link href={`${DOCS}/docs/evaluate`} className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200">Plan an evaluation and share feedback</Link>.
+              {" "}Begin with the{" "}
+              <Link href={`${REPO}/blob/main/docs/evaluation/five-minute-walkthrough.md`} className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200">
+                five-minute synthetic walkthrough
+              </Link>
+              , predeclare cases with the{" "}
+              <Link href={`${REPO}/blob/main/docs/evaluation/expected-outcomes.md`} className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200">
+                expected-outcome test pack
+              </Link>
+              , then{" "}
+              <Link href={`${DOCS}/docs/evaluate`} className="text-cyan-300 underline underline-offset-4 hover:text-cyan-200">
+                Plan an evaluation and share feedback
+              </Link>.
             </p>
           </div>
           <div className="min-w-0 rounded-xl border border-white/10 bg-black/40 shadow-[0_0_60px_-24px_#22d3ee]">

@@ -30,6 +30,23 @@ test("homepage uses the publication source, works on mobile, and explains author
   expect(await (await request.get("/sitemap.xml")).text()).toContain("https://www.clearproof.world");
 });
 
+test("pointer hover and keyboard focus pause autoplay independently", async ({ page }) => {
+  await page.goto("/");
+  const card = page.locator("[data-sealed]");
+  await card.scrollIntoViewIfNeeded();
+  const clearproof = page.getByRole("button", { name: "With clearproof", exact: true });
+  await clearproof.focus();
+  await expect(card).toHaveAttribute("data-playing", "false");
+  // A pointer entering and leaving must not resume while focus remains inside.
+  await card.hover();
+  await expect(card).toHaveAttribute("data-playing", "false");
+  await page.mouse.move(1, 1);
+  await expect(card).toHaveAttribute("data-playing", "false");
+  // Once both are gone, autoplay resumes.
+  await clearproof.evaluate((node) => (node as HTMLElement).blur());
+  await expect(card).toHaveAttribute("data-playing", "true");
+});
+
 test("reduced motion leaves the illustrative transfer under manual control", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");

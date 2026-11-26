@@ -21,6 +21,32 @@ it("uses catalogue release facts and filters future articles at the publication 
 });
 
 it.each([
+  "1.2.3-rc.1", "1.2.3-beta.2+build.7", "0.0.0-0", "1.2.3+build.7",
+])("accepts npmVersion with SemVer prerelease or build suffix: %s", npmVersion => {
+  expect(parseProjectCatalogue({ ...catalogue, npmVersion }, NOW).npmVersion).toBe(npmVersion);
+});
+
+it.each([
+  "latest", "1.2", "v1.2.3", "1.2.3-", "1.2.3+", "1.2.3-01", "01.2.3",
+])("rejects invalid npmVersion %s with a field-specific error", npmVersion => {
+  expect(() => parseProjectCatalogue({ ...catalogue, npmVersion }, NOW))
+    .toThrow(/Invalid public project catalogue: npmVersion/);
+});
+
+it.each([
+  "pilot-transfer-v3", "legacy-v1", "production-transfer-v1", "transfer-v12",
+])("accepts documented profile name %s", proofProfile => {
+  expect(parseProjectCatalogue({ ...catalogue, proofProfile }, NOW).proofProfile).toBe(proofProfile);
+});
+
+it.each([
+  "unknown", "Pilot-Transfer-v3", "pilot_transfer_v3", "pilot-transfer-v0", "legacy",
+])("rejects undocumented profile name %s with a field-specific error", proofProfile => {
+  expect(() => parseProjectCatalogue({ ...catalogue, proofProfile }, NOW))
+    .toThrow(/Invalid public project catalogue: proofProfile/);
+});
+
+it.each([
   null, [], { ...catalogue, schemaVersion: 2 }, { ...catalogue, npmVersion: "latest" },
   { ...catalogue, checkedAt: "invalid" }, { ...catalogue, proofProfile: "unknown" },
   { ...catalogue, checkedAt: "2026-02-31" },

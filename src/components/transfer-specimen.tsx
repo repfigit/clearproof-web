@@ -61,7 +61,8 @@ export function TransferSpecimen() {
   const [view, setView] = useState<View>("plain");
   const [autoplay, setAutoplay] = useState(true);
   const [userPaused, setUserPaused] = useState(false);
-  const [hovering, setHovering] = useState(false);
+  const [pointerHover, setPointerHover] = useState(false);
+  const [focusWithin, setFocusWithin] = useState(false);
   const [inView, setInView] = useState(false);
   const [runId, setRunId] = useState(0);
   const [announce, setAnnounce] = useState(false);
@@ -69,7 +70,7 @@ export function TransferSpecimen() {
   const cardRef = useRef<HTMLDivElement>(null);
   const sealed = view === "sealed";
 
-  const playing = autoplay && !userPaused && !hovering && inView && !reducedMotion;
+  const playing = autoplay && !userPaused && !pointerHover && !focusWithin && inView && !reducedMotion;
 
   useEffect(() => {
     const card = cardRef.current;
@@ -103,15 +104,16 @@ export function TransferSpecimen() {
     <div
       ref={cardRef}
       data-sealed={sealed}
-      onMouseEnter={() => setHovering(true)}
+      data-playing={playing}
+      onMouseEnter={() => setPointerHover(true)}
       onMouseLeave={() => {
-        setHovering(false);
+        setPointerHover(false);
         resume();
       }}
-      onFocus={() => setHovering(true)}
+      onFocus={() => setFocusWithin(true)}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) {
-          setHovering(false);
+          setFocusWithin(false);
           resume();
         }
       }}

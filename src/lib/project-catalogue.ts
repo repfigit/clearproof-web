@@ -49,17 +49,85 @@ export function parseProjectCatalogue(value: unknown, now = Date.now()): Project
   };
 }
 
+const CATALOGUE_TIMEOUT_MS = 5000;
+const CATALOGUE_MAX_BYTES = 131072;
+const CATALOGUE_REVALIDATE_SECONDS = 60;
+
+type CatalogueFailure =
+  | { reason: "timeout"; timeoutMs: number }
+  | { reason: "network" }
+  | { reason: "http_status"; status: number }
+  | { reason: "body_read" }
+  | { reason: "oversize"; bytes: number }
+  | { reason: "invalid_json" }
+  | { reason: "invalid_schema" };
+
+function logCatalogueFailure(failure: CatalogueFailure, error?: unknown): void {
+  const detail = error instanceof Error
+    ? { error: error.name, message: error.message.slice(0, 200) }
+    : {};
+  console.warn(JSON.stringify({
+    event: "project_catalogue_unavailable",
+    ...failure,
+    ...detail,
+  }));
+}
+
+function isTimeout(error: unknown): boolean {
+  return error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError");
+}
+
 export async function loadProjectCatalogue(): Promise<ProjectCatalogue | null> {
+  let response: Response;
   try {
-    const response = await fetch(process.env.CLEARPROOF_CONTENT_URL ?? `${DOCS}/api/content/project`, {
-      cache: "no-store", signal: AbortSignal.timeout(5000),
+    response = await fetch(process.env.CLEARPROOF_CONTENT_URL ?? `${DOCS}/api/content/project`, {
+      // Keep a successful catalogue warm for a short window, then revalidate.
+      // Scheduled explainers are still filtered per render against publishAfter.
+      cache: "force-cache",
+      next: { revalidate: CATALOGUE_REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(CATALOGUE_TIMEOUT_MS),
     });
-    if (!response.ok) return null;
-    const body = await response.text();
-    if (body.length > 131072) return null;
-    return parseProjectCatalogue(JSON.parse(body));
-  } catch {
-    // Never promote guessed or cached unpublished article URLs on failure.
+  } catch (error) {
+    logCatalogueFailure(isTimeout(error)
+      ? { reason: "timeout", timeoutMs: CATALOGUE_TIMEOUT_MS }
+      : { reason: "network" }, error);
+    return null;
+  }
+
+  if (!response.ok) {
+    logCatalogueFailure({ reason: "http_status", status: response.status });
+    return null;
+  }
+
+  let body: string;
+  try {
+    body = await response.text();
+  } catch (error) {
+    logCatalogueFailure(isTimeout(error)
+      ? { reason: "timeout", timeoutMs: CATALOGUE_TIMEOUT_MS }
+      : { reason: "body_read" }, error);
+    return null;
+  }
+
+  const bytes = new TextEncoder().encode(body).length;
+  if (bytes > CATALOGUE_MAX_BYTES) {
+    logCatalogueFailure({ reason: "oversize", bytes });
+    return null;
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(body);
+  } catch (error) {
+    logCatalogueFailure({ reason: "invalid_json" }, error);
+    return null;
+  }
+
+  try {
+    return parseProjectCatalogue(parsed);
+  } catch (error) {
+    // A failed refresh must never promote guessed links or a stale release.
+    logCatalogueFailure({ reason: "invalid_schema" }, error);
     return null;
   }
 }

@@ -18,19 +18,23 @@ information flow; it does not generate or authorize a cryptographic proof.
 
 ## Release and publication source
 
-The homepage loads `https://docs.clearproof.world/api/content/project` on each
-request. The core repository's `packages/content/src/project.ts` owns release,
-profile, assurance and capacity statements. Its approved explainer catalogue
-owns titles and publication dates. Scheduled articles and paused publications
-are excluded by the documentation service and checked again by this website.
+The homepage loads `https://docs.clearproof.world/api/content/project` and keeps
+a successful response in Next's server data cache for 60 seconds before
+revalidating in the background. The core repository's
+`packages/content/src/project.ts` owns release, profile, assurance and capacity
+statements. Its approved explainer catalogue owns titles and publication dates.
+Scheduled articles and paused publications are excluded by the documentation
+service and checked again by this website on every render.
 
 Set `CLEARPROOF_CONTENT_URL` to a documentation preview's `/api/content/project`
 URL for local development or previews. This is an operator-controlled server
 variable, not visitor input. Requests time out after five seconds. If the source
 is unavailable or malformed, the homepage displays a status-unavailable notice
-and links to the index without guessing article URLs or showing a stale release.
-Deploy the documentation endpoint before a website change that depends on it.
-Publishing a new explainer needs no website commit.
+and links to the index without guessing article URLs or promoting a stale
+release; a previously cached success may be shown for up to the 60-second
+revalidation window. Structured warnings record the failure reason. Deploy the
+documentation endpoint before a website change that depends on it. Publishing a
+new explainer needs no website commit.
 
 ## Evaluation entry
 
@@ -40,6 +44,19 @@ report template and voluntary GitHub feedback form. Deploy and verify
 `https://docs.clearproof.world/docs/evaluate` before promoting a website revision
 that depends on this route. Site visits or link clicks do not establish an
 external evaluation or adoption.
+
+## Security headers
+
+`next.config.ts` sets baseline security headers on every route: an enforcing
+Content-Security-Policy, `nosniff`, `strict-origin-when-cross-origin` referrer
+policy, `X-Frame-Options: DENY` with `frame-ancestors 'none'`, and a restrictive
+Permissions-Policy. Scripts, styles, fonts and images remain same-origin, so
+`/_next/*` output and `public/` files keep working. The policy allows inline
+scripts and styles because the app does not use a Proxy-generated nonce yet.
+
+Roll out CSP to a preview first and check the browser console and HTML-validated
+assets before production. If a deployment adds third-party embeds, analytics or
+fonts, extend the matching directive rather than dropping `default-src`.
 
 ## Validation
 

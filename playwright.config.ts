@@ -13,8 +13,9 @@ export default defineConfig({
   webServer: [
     { command: "node scripts/catalogue-fixture.mjs", url: "http://127.0.0.1:43145", reuseExistingServer: false },
     {
-      command: "npm run start -- --hostname 127.0.0.1 --port 43144",
-      url: "http://127.0.0.1:43144", reuseExistingServer: false, timeout: 60_000,
+      // Build once against the fixture so the short catalogue cache starts warm.
+      command: "npm run build && npm run start -- --hostname 127.0.0.1 --port 43144",
+      url: "http://127.0.0.1:43144", reuseExistingServer: false, timeout: 120_000,
       env: { CLEARPROOF_CONTENT_URL: "http://127.0.0.1:43145" },
     },
   ],
